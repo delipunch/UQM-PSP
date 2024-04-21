@@ -1,0 +1,2 @@
+uqm_CFILES="alist.c direct.c filecntl.c getres.c loadres.c mapres.c
+		resdata.c resinit.c stringbank.c"

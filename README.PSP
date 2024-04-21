@@ -1,0 +1,15 @@
+This is a very basic port of UQM to the PSP.  I got tired of dicking around
+with the UQM makefile system, so I just created a straight-forward makefile
+specifically for the PSP.  Most changes are directly ported from my old
+0.5.0 effort.  There is still some major work to be done:
+
+1. Get standby working (need to pause all threads, close all file handles, then the opposite when resuming)
+2. Get OpenGL working (right now it crashes in various ways, most likely due to some sort of memory corruption)
+3. Try out the network play functionality (right now disabled).
+
+To build, get the latest SDK, SDL, SDL_image, png, tremor, zlib, etc libraries built and configured.
+Type "make" to build.
+
+Enjoy!
+Sharkus
+sharkus@gmail.com

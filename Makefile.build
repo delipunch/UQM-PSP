@@ -1,0 +1,88 @@
+# Make file for the uqm build system. Invoked from build/unix/build_functions
+# By Serge van den Boom
+
+.DELETE_ON_ERROR:
+
+SOURCES := $(shell cat "$(DEPEND_FILE)")
+-include $(SOURCES:=.d)
+
+ifeq ($(MAKE_VERBOSE),1)
+define act
+	$(call $(1))
+endef
+else
+define act
+	@echo "  $(2)  $(3)"
+	@$(call $(1))
+endef
+endif
+
+define act_mkdep_c
+	$(MKDEP_C) $(CFLAGS) "$<" -MT "$(@D)/$(<F).o" -MF "$@"
+endef
+
+define act_mkdep_m
+	$(MKDEP_OBJC) $(CFLAGS) "$<" -MT "$(@D)/$(<F).o" -MF "$@"
+endef
+
+define act_windres
+	$(WINDRES) --include-dir $(dir $<) -o "$@" "$<"
+endef
+
+define act_cc
+	echo $(CFLAGS)
+	$(COMPILE_C) -o "$@" $(CFLAGS) "$<"
+endef
+
+define act_objcc
+	$(COMPILE_OBJC) -o "$@" $(CFLAGS) "$<"
+endef
+
+define act_link
+	$(LINK) -o "$@" $^ $(LDFLAGS)
+	echo $(LDFLAGS)
+endef
+
+
+default:
+	./build.sh uqm
+
+$(OBJDIR)%.c.d: $(BUILD_ROOT)%.c
+	@DIR=$(dir $@); \
+	if [ ! -d $$DIR ]; then \
+		mkdir -p "$$DIR"; \
+	fi
+	$(call act,act_mkdep_c,MKDEP  ,$@)
+
+$(OBJDIR)%.m.d: $(BUILD_ROOT)%.m
+	@DIR=$(dir $@); \
+	if [ ! -d $$DIR ]; then \
+		mkdir -p "$$DIR"; \
+	fi
+	$(call act,act_mkdep_m,MKDEP  ,$@)
+
+%.rc.o: %.rc
+	@DIR=$(dir $@); \
+	if [ ! -d $$DIR ]; then \
+		mkdir -p "$$DIR"; \
+	fi
+	$(call act,act_windres,WINDRES,$@)
+
+%.c.o:
+	@DIR=$(dir $@); \
+	if [ ! -d $$DIR ]; then \
+		mkdir -p "$$DIR"; \
+	fi
+	$(call act,act_cc,CC     ,$@)
+
+%.m.o:
+	@DIR=$(dir $@); \
+	if [ ! -d $$DIR ]; then \
+		mkdir -p "$$DIR"; \
+	fi
+	$(call act,act_objcc,OBJCC  ,$@)
+
+$(TARGET_FILE): $(SOURCES:=.o)
+	$(call act,act_link,LINK   ,$@)
+
+
