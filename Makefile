@@ -331,15 +331,15 @@ ASFLAGS = $(CFLAGS)
 LIBDIR =
 LDFLAGS +=
 
-PSP_FW_VERSION = 371
+PSP_FW_VERSION = 660
 
 PSPSDK=$(shell psp-config --pspsdk-path)
-#include $(PSPSDK)/lib/build.mak
-LIBS += -lSDL_image -ljpeg -lpng -lvorbisidec -lz
 
 PSPBIN = $(PSPSDK)/../bin
+
 CFLAGS += $(shell $(PSPBIN)/sdl-config --cflags)
-LIBS += $(shell $(PSPBIN)/sdl-config --libs)
+LIBS += -lSDL_image -ljpeg -lpng -lvorbisidec -lz $(shell $(PSPBIN)/sdl-config --libs) 
+
 
 include $(PSPSDK)/lib/build.mak
 
