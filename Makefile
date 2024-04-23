@@ -71,28 +71,6 @@ OBJS = src/regex/regex.o \
     src/sc2code/planets/devices.o \
     src/sc2code/planets/cargo.o \
     src/sc2code/planets/calc.o \
-    src/sc2code/libs/mikmod/virtch_common.o \
-    src/sc2code/libs/mikmod/virtch2.o \
-    src/sc2code/libs/mikmod/virtch.o \
-    src/sc2code/libs/mikmod/sloader.o \
-    src/sc2code/libs/mikmod/npertab.o \
-    src/sc2code/libs/mikmod/mwav.o \
-    src/sc2code/libs/mikmod/munitrk.o \
-    src/sc2code/libs/mikmod/mplayer.o \
-    src/sc2code/libs/mikmod/mmio.o \
-    src/sc2code/libs/mikmod/mmerror.o \
-    src/sc2code/libs/mikmod/mmalloc.o \
-    src/sc2code/libs/mikmod/mlutil.o \
-    src/sc2code/libs/mikmod/mlreg.o \
-    src/sc2code/libs/mikmod/mloader.o \
-    src/sc2code/libs/mikmod/mdriver.o \
-    src/sc2code/libs/mikmod/mdreg.o \
-    src/sc2code/libs/mikmod/load_xm.o \
-    src/sc2code/libs/mikmod/load_stm.o \
-    src/sc2code/libs/mikmod/load_s3m.o \
-    src/sc2code/libs/mikmod/load_mod.o \
-    src/sc2code/libs/mikmod/load_it.o \
-    src/sc2code/libs/mikmod/drv_nos.o \
     src/sc2code/libs/log/uqmlog.o \
     src/sc2code/libs/video/dukvid.o \
     src/sc2code/libs/video/vidplayer.o \
@@ -306,11 +284,9 @@ OBJS = src/regex/regex.o \
     src/port.o \
     src/options.o
 
-BUILD_PRX=1
 
-INCDIR = /usr/local/pspdev/psp/sdk/include \
-    /usr/local/pspdev/psp/include/SDL \
-    . \
+
+INCDIR = . \
     src \
     src/sc2code \
     src/sc2code/libs \
@@ -321,25 +297,24 @@ INCDIR = /usr/local/pspdev/psp/sdk/include \
 # LDFLAGS = -Wl,-Map,uqm.map
 
 # RELEASE CONFIG
-CFLAGS = -O2 -G0 -Wall -D_GNU_SOURCE=1 -D_REENTRANT -DPSP -DGFXMODULE_SDL -DSOUNDMODULE_SDL -DUSE_INTERNAL_MIKMOD -DHAVE_ZIP=1 -DHAVE_JOYSTICK -DOVCODEC_TREMOR
-EXTRA_TARGETS = EBOOT.PBP
+#CFLAGS = -O2 -G0 -Wall -D_GNU_SOURCE=1 -D_REENTRANT -DPSP -DGFXMODULE_SDL -DSOUNDMODULE_SDL -DUSE_INTERNAL_MIKMOD -DHAVE_ZIP=1 -DHAVE_JOYSTICK -DOVCODEC_TREMOR
+
+BUILD_PRX=1
+
+CFLAGS = -O2 -G0 -Wall -D_GNU_SOURCE=1 -D_REENTRANT -DPSP -DGFXMODULE_SDL -DSOUNDMODULE_SDL -DHAVE_ZIP=1 -DHAVE_JOYSTICK
 PSP_EBOOT_TITLE = UQM 0.6.2 - R02 Mod
 
 CXXFLAGS = $(CFLAGS) -fno-exceptions -fno-rtti
 ASFLAGS = $(CFLAGS)
 
-LIBDIR =
-LDFLAGS +=
-
 PSP_FW_VERSION = 660
 
 PSPSDK=$(shell psp-config --pspsdk-path)
-
 PSPBIN = $(PSPSDK)/../bin
 
 CFLAGS += $(shell $(PSPBIN)/sdl-config --cflags)
-LIBS += -lSDL_image -ljpeg -lpng -lvorbisidec -lz $(shell $(PSPBIN)/sdl-config --libs) 
-
+LIBS += -L$(PSPDEV)/psp/lib -lSDLmain -lSDL -lm -lGL -lSDL_image -lpspirkeyb -ljpeg -lpng -lmikmod -lvorbisidec -lvorbisfile -lz -lpspgu -lpspaudio -lpsphprm -lpspvfpu -lpsppower
+EXTRA_TARGETS=EBOOT.PBP
 
 include $(PSPSDK)/lib/build.mak
 
