@@ -521,7 +521,8 @@ BATTLE_INPUT_STATE GetDirectionalJoystickInput(int direction, int player)
 	/* } */
 
 	int axisX = VControl_GetJoyAxis(0, player * 2), axisY = VControl_GetJoyAxis(0, player * 2 + 1);
-
+	//int axisX = SDL_JoystickGetAxis(&joysticks[0].stick, player * 2), axisY = SDL_JoystickGetAxis(&joysticks[0].stick, player * 2 + 1);
+	
 	if( axisX == 0 && axisY == 0 )
 	{
 		// Some basic gamepad input support
@@ -601,8 +602,10 @@ BATTLE_INPUT_STATE GetDirectionalJoystickInput(int direction, int player)
 			else
 				JoystickThrust[player] = TRUE;
 		}
-		if( JoystickThrust[player] )
+		//For now, we dont need the below. Maybe when I add this to navigation for the lander or in space 
+		/*if( JoystickThrust[player] )
 			InputState |= BATTLE_THRUST;
+		*/
 	}
 	else
 	{

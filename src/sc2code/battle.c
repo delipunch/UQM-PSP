@@ -161,6 +161,8 @@ ProcessInput (void)
 
 				InputState = (*(PlayerInput[cur_player]))(cur_player,
 						StarShipPtr);
+				//Correct place!
+				InputState |= GetDirectionalJoystickInput(StarShipPtr->ShipFacing,cur_player);
 #if CREATE_JOURNAL
 				JournalInput (InputState);
 #endif /* CREATE_JOURNAL */
@@ -198,8 +200,8 @@ ProcessInput (void)
 						DoRunAway (StarShipPtr);
 				}
 			}
-
-			InputState |= GetDirectionalJoystickInput(StarShipPtr->ShipFacing,cur_player);
+			//Wrong place!
+			//InputState |= GetDirectionalJoystickInput(StarShipPtr->ShipFacing,cur_player);
  
 			UnlockStarShip (&race_q[cur_player], hBattleShip);
 		}

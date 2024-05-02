@@ -46,6 +46,7 @@ typedef struct vcontrol_keypool {
 typedef struct vcontrol_joystick_axis {
 	keybinding *neg, *pos;
 	int polarity;
+	int value;
 } axis_type;
 
 typedef struct vcontrol_joystick_hat {
@@ -151,6 +152,7 @@ create_joystick (int index)
 		for (j = 0; j < axes; j++)
 		{
 			x->axes[j].neg = x->axes[j].pos = NULL;
+			x->axes[j].polarity = x->axes[j].value = 0;
 		}
 		for (j = 0; j < hats; j++)
 		{
@@ -813,6 +815,7 @@ VControl_ProcessJoyAxis (int port, int axis, int value)
 	int t;
 	if (!joysticks[port].stick)
 		return;
+	joysticks[port].axes[axis].value = value;
 	t = joysticks[port].threshold;
 	if (value > t)
 	{
@@ -1742,8 +1745,12 @@ VControl_GetJoyAxis(int port, int axis)
 	if (!joysticks[port].stick || joysticks[port].numaxes <= axis )
 		return 0;
 	
-	return SDL_JoystickGetAxis(&joysticks[port].stick, axis);
+	return joysticks[port].axes[axis].value;
+
+	//Below: failed attempts to make this work
 	
+	//return SDL_JoystickGetAxis(joysticks[port].stick, axis);
+	//return joysticks[port].axes[axis];
 	
 	/*if (joysticks[port].axes[axis].polarity < 0)
 	{
