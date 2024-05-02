@@ -199,6 +199,8 @@ ProcessInput (void)
 				}
 			}
 
+			InputState |= GetDirectionalJoystickInput(StarShipPtr->ShipFacing,cur_player);
+ 
 			UnlockStarShip (&race_q[cur_player], hBattleShip);
 		}
 	}

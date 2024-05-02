@@ -1732,3 +1732,33 @@ VControl_TokenizeFile (FILE *in)
 	}
 }
 #endif
+
+int
+VControl_GetJoyAxis(int port, int axis)
+{
+#ifdef HAVE_JOYSTICK
+	if( joycount <= port )
+		return 0;
+	if (!joysticks[port].stick || joysticks[port].numaxes <= axis )
+		return 0;
+	
+	return SDL_JoystickGetAxis(&joysticks[port].stick, axis);
+	
+	
+	/*if (joysticks[port].axes[axis].polarity < 0)
+	{
+		return joysticks[port].axes[axis].neg;
+	}
+	else if (joysticks[port].axes[axis].polarity > 0)
+	{
+		return joysticks[port].axes[axis].pos;
+	}
+	else
+	{
+		log_add (log_Debug, "VControl: Attempted to bind to polarity zero");
+		return -1;
+	}*/
+#else
+	return 0;
+#endif /* HAVE_JOYSTICK */
+};

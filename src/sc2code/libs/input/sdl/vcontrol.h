@@ -121,4 +121,6 @@ int  VControl_NextBinding (VCONTROL_GESTURE *gesture);
 void VControl_ClearEvent (void);
 int  VControl_GetLastEvent (SDL_Event *e);
 
+int VControl_GetJoyAxis(int port, int axis);
+
 #endif
