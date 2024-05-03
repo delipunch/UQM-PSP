@@ -1685,16 +1685,20 @@ SetVelocityComponents (
 		else
 		{
 			index = GetFrameIndex (LanderFrame[0]);
+			
+		BATTLE_INPUT_STATE InputState = GetDirectionalJoystickInput(index, 0);
+		InputState |= CurrentInputState.key[PlayerOne][KEY_UP] << BATTLE_THRUST;
+	
 			if (LONIBBLE (pMS->CurState))
 				pMS->CurState -= MAKE_BYTE (1, 0);
-			else if (CurrentInputState.key[PlayerOne][KEY_LEFT] || CurrentInputState.key[PlayerOne][KEY_RIGHT])
+			else if (InputState & BATTLE_LEFT || InputState & BATTLE_RIGHT || CurrentInputState.key[PlayerOne][KEY_LEFT] || CurrentInputState.key[PlayerOne][KEY_RIGHT])
 			{
-				if (CurrentInputState.key[PlayerOne][KEY_LEFT])
+				if (InputState & BATTLE_LEFT || CurrentInputState.key[PlayerOne][KEY_LEFT])
 				{
 					dx = -1;
 					--index;
 				}
-				else
+				if (InputState & BATTLE_RIGHT || CurrentInputState.key[PlayerOne][KEY_RIGHT])
 				{
 					dx = +1;
 					++index;

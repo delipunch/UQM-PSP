@@ -1,20 +1,20 @@
 //Copyright Paul Reiche, Fred Ford. 1992-2002
 
 /*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
- */
+	*  This program is free software; you can redistribute it and/or modify
+	*  it under the terms of the GNU General Public License as published by
+	*  the Free Software Foundation; either version 2 of the License, or
+	*  (at your option) any later version.
+	*
+	*  This program is distributed in the hope that it will be useful,
+	*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+	*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	*  GNU General Public License for more details.
+	*
+	*  You should have received a copy of the GNU General Public License
+	*  along with this program; if not, write to the Free Software
+	*  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+*/
 
 #include "controls.h"
 #include "init.h"
@@ -120,9 +120,9 @@ _check_for_pulse (int *current, int *cached, int *old, DWORD *accel, DWORD *newt
 		{
 			*current = *cached;
 			if (*accel > _min_accel)
-				*accel -= _step_accel;
+			*accel -= _step_accel;
 			if (*accel < _min_accel)
-				*accel = _min_accel;
+			*accel = _min_accel;
 			*oldtime = *newtime;
 		}
 	}
@@ -135,16 +135,16 @@ _check_for_pulse (int *current, int *cached, int *old, DWORD *accel, DWORD *newt
 }
 
 /* BUG: If a key from a currently unused control template is held,
- * this will affect the gestalt repeat rate.  This isn't a problem
- * *yet*, but it will be once the user gets to define control
- * templates on his own --McM */
+	* this will affect the gestalt repeat rate.  This isn't a problem
+	* *yet*, but it will be once the user gets to define control
+* templates on his own --McM */
 static void
 _check_gestalt (DWORD NewTime)
 {
 	BOOLEAN CurrentGestalt;
 	int i,j;
 	OldGestalt = CachedGestalt;
-
+	
 	CachedGestalt = 0;
 	CurrentGestalt = 0;
 	for (i = 0; i < NUM_TEMPLATES; i++)
@@ -160,7 +160,7 @@ _check_gestalt (DWORD NewTime)
 		CachedGestalt |= ImmediateInputState.menu[i];
 		CurrentGestalt |= PulsedInputState.menu[i];
 	}
-
+	
 	if (OldGestalt && CachedGestalt)
 	{
 		if (NewTime - GestaltTime < GestaltRepeatDelay)
@@ -191,9 +191,9 @@ _check_gestalt (DWORD NewTime)
 				PulsedInputState.menu[i] = CachedInputState.menu[i];
 			}
 			if (GestaltRepeatDelay > _min_accel)
-				GestaltRepeatDelay -= _step_accel;
+			GestaltRepeatDelay -= _step_accel;
 			if (GestaltRepeatDelay < _min_accel)
-				GestaltRepeatDelay = _min_accel;
+			GestaltRepeatDelay = _min_accel;
 			GestaltTime = NewTime;
 		}
 	}
@@ -220,18 +220,18 @@ UpdateInputState (void)
 {
 	DWORD NewTime;
 	/* First, if the game is, in fact, paused, we stall until
-	 * unpaused.  Every thread with control over game logic calls
-	 * UpdateInputState routinely, so we handle pause and exit
-	 * state updates here. */
-
+		* unpaused.  Every thread with control over game logic calls
+		* UpdateInputState routinely, so we handle pause and exit
+	* state updates here. */
+	
 	if (GamePaused)
-		PauseGame ();
-
+	PauseGame ();
+	
 	if (ExitRequested)
 	{
 		ConfirmExit ();
 	}
-
+	
 	CurrentInputState = ImmediateInputState;
 	OldInputState = CachedInputState;
 	CachedInputState = ImmediateInputState;
@@ -248,23 +248,23 @@ UpdateInputState (void)
 			for (j = 0; j < NUM_KEYS; j++)
 			{
 				_check_for_pulse (&PulsedInputState.key[i][j],
-						&CachedInputState.key[i][j], &OldInputState.key[i][j],
-						&RepeatDelays.key[i][j], &NewTime, &Times.key[i][j]);
+					&CachedInputState.key[i][j], &OldInputState.key[i][j],
+				&RepeatDelays.key[i][j], &NewTime, &Times.key[i][j]);
 			}
 		}
 		for (i = 0; i < NUM_MENU_KEYS; i++)
 		{
 			_check_for_pulse (&PulsedInputState.menu[i],
-					&CachedInputState.menu[i], &OldInputState.menu[i],
-					&RepeatDelays.menu[i], &NewTime, &Times.menu[i]);
+				&CachedInputState.menu[i], &OldInputState.menu[i],
+			&RepeatDelays.menu[i], &NewTime, &Times.menu[i]);
 		}
 	}
-
+	
 	if (CurrentInputState.menu[KEY_PAUSE])
-		GamePaused = TRUE;
-
+	GamePaused = TRUE;
+	
 	if (CurrentInputState.menu[KEY_EXIT])
-		ExitRequested = TRUE;
+	ExitRequested = TRUE;
 }
 
 
@@ -308,21 +308,21 @@ DoInput (PVOID pInputState, BOOLEAN resetInput)
 	{
 		MENU_SOUND_FLAGS input;
 		TaskSwitch ();
-
+		
 		UpdateInputState ();
-
-#if DEMO_MODE || CREATE_JOURNAL
-		if (ArrowInput != DemoInput)
-#endif
+		
+		#if DEMO_MODE || CREATE_JOURNAL
+			if (ArrowInput != DemoInput)
+		#endif
 		{
-#if CREATE_JOURNAL
-			JournalInput (InputState);
-#endif /* CREATE_JOURNAL */
+			#if CREATE_JOURNAL
+				JournalInput (InputState);
+			#endif /* CREATE_JOURNAL */
 		}
-
+		
 		if (CurrentInputState.menu[KEY_EXIT])
-			ExitState = ConfirmExit ();
-
+		ExitState = ConfirmExit ();
+		
 		input = MENU_SOUND_NONE;
 		if (PulsedInputState.menu[KEY_MENU_UP]) input |= MENU_SOUND_UP;
 		if (PulsedInputState.menu[KEY_MENU_DOWN]) input |= MENU_SOUND_DOWN;
@@ -335,33 +335,33 @@ DoInput (PVOID pInputState, BOOLEAN resetInput)
 		if (PulsedInputState.menu[KEY_MENU_PAGE_DOWN]) input |= MENU_SOUND_PAGEDOWN;
 		if (PulsedInputState.menu[KEY_MENU_DELETE]) input |= MENU_SOUND_DELETE;
 		if (PulsedInputState.menu[KEY_MENU_BACKSPACE]) input |= MENU_SOUND_DELETE;
-			
+		
 		if (MenuSounds
-				&& (pSolarSysState == 0
-						/* see if in menu */
+			&& (pSolarSysState == 0
+				/* see if in menu */
 				|| pSolarSysState->MenuState.CurState
-				|| pSolarSysState->MenuState.Initialized > 2)
-		                && (input & (sound_0 | sound_1))
-#ifdef NEVER
+			|| pSolarSysState->MenuState.Initialized > 2)
+			&& (input & (sound_0 | sound_1))
+			#ifdef NEVER
 				&& !PLRPlaying ((MUSIC_REF)~0)
-#endif /* NEVER */
-				)
+			#endif /* NEVER */
+		)
 		{
 			SOUND S;
-
+			
 			S = MenuSounds;
 			if (input & sound_1)
-				S = SetAbsSoundIndex (S, MENU_SOUND_SUCCESS);
-
+			S = SetAbsSoundIndex (S, MENU_SOUND_SUCCESS);
+			
 			PlaySoundEffect (S, 0, NotPositional (), NULL, 0);
 		}
-	} while ((*((PINPUT_STATE_DESC)pInputState)->InputFunc)
-			(pInputState));
+		} while ((*((PINPUT_STATE_DESC)pInputState)->InputFunc)
+	(pInputState));
 	if (resetInput)
 	{
 		TFB_ResetControls ();
 	}
-
+	
 }
 
 void
@@ -385,20 +385,20 @@ p1_combat_summary (COUNT player, STARSHIPPTR StarShipPtr)
 {
 	BATTLE_INPUT_STATE InputState = 0;
 	if (CurrentInputState.key[PlayerOne][KEY_UP])
-		InputState |= BATTLE_THRUST;
+	InputState |= BATTLE_THRUST;
 	if (CurrentInputState.key[PlayerOne][KEY_LEFT])
-		InputState |= BATTLE_LEFT;
+	InputState |= BATTLE_LEFT;
 	if (CurrentInputState.key[PlayerOne][KEY_RIGHT])
-		InputState |= BATTLE_RIGHT;
+	InputState |= BATTLE_RIGHT;
 	if (CurrentInputState.key[PlayerOne][KEY_WEAPON])
-		InputState |= BATTLE_WEAPON;
+	InputState |= BATTLE_WEAPON;
 	if (CurrentInputState.key[PlayerOne][KEY_SPECIAL])
-		InputState |= BATTLE_SPECIAL;
+	InputState |= BATTLE_SPECIAL;
 	if (CurrentInputState.key[PlayerOne][KEY_ESCAPE])
-		InputState |= BATTLE_ESCAPE;
+	InputState |= BATTLE_ESCAPE;
 	if (CurrentInputState.key[PlayerOne][KEY_DOWN])
-		InputState |= BATTLE_DOWN;
-
+	InputState |= BATTLE_DOWN;
+	
 	(void) player;
 	(void) StarShipPtr;
 	return InputState;
@@ -409,18 +409,18 @@ p2_combat_summary (COUNT player, STARSHIPPTR StarShipPtr)
 {
 	BATTLE_INPUT_STATE InputState = 0;
 	if (CurrentInputState.key[PlayerTwo][KEY_UP])
-		InputState |= BATTLE_THRUST;
+	InputState |= BATTLE_THRUST;
 	if (CurrentInputState.key[PlayerTwo][KEY_LEFT])
-		InputState |= BATTLE_LEFT;
+	InputState |= BATTLE_LEFT;
 	if (CurrentInputState.key[PlayerTwo][KEY_RIGHT])
-		InputState |= BATTLE_RIGHT;
+	InputState |= BATTLE_RIGHT;
 	if (CurrentInputState.key[PlayerTwo][KEY_WEAPON])
-		InputState |= BATTLE_WEAPON;
+	InputState |= BATTLE_WEAPON;
 	if (CurrentInputState.key[PlayerTwo][KEY_SPECIAL])
-		InputState |= BATTLE_SPECIAL;
+	InputState |= BATTLE_SPECIAL;
 	if (CurrentInputState.key[PlayerTwo][KEY_DOWN])
-		InputState |= BATTLE_DOWN;
-
+	InputState |= BATTLE_DOWN;
+	
 	(void) player;
 	(void) StarShipPtr;
 	return InputState;
@@ -437,13 +437,13 @@ AnyButtonPress (BOOLEAN CheckSpecial)
 		for (j = 0; j < NUM_KEYS; j++)
 		{
 			if (CurrentInputState.key[i][j])
-				return TRUE;
+			return TRUE;
 		}
 	}
 	for (i = 0; i < NUM_MENU_KEYS; i++)
 	{
 		if (CurrentInputState.menu[i])
-			return TRUE;
+		return TRUE;
 	}
 	return FALSE;
 }
@@ -453,14 +453,14 @@ ConfirmExit (void)
 {
 	DWORD old_max_accel, old_min_accel, old_step_accel;
 	BOOLEAN old_gestalt_keys, result;
-
+	
 	old_max_accel = _max_accel;
 	old_min_accel = _min_accel;
 	old_step_accel = _step_accel;
 	old_gestalt_keys = _gestalt_keys;
-		
+	
 	SetDefaultMenuRepeatDelay ();
-		
+	
 	result = DoConfirmExit ();
 	
 	SetMenuRepeatDelay (old_min_accel, old_max_accel, old_step_accel, old_gestalt_keys);
@@ -475,40 +475,41 @@ ConfirmExit (void)
 // Stolen from http://www.dspguru.com/dsp/tricks/fixed-point-atan2-with-self-normalization , precision is said to be 0.07 rads
 
 #ifndef M_PI
-#define M_PI 3.14159265358979323846
+	#define M_PI 3.14159265358979323846
 #endif
 enum { atan2i_coeff_1 = ((int)(M_PI*65536.0/4)), atan2i_coeff_2 = (3*atan2i_coeff_1), atan2i_PI = (int)(M_PI * 65536.0), SHIP_DIRECTIONS = 16 };
 
 static inline int atan2i(int y, int x)
 {
-   int angle;
-   int abs_y = abs(y);
-   if( abs_y == 0 )
-      abs_y = 1;
-   if (x>=0)
-   {
-      angle = atan2i_coeff_1 - atan2i_coeff_1 * (x - abs_y) / (x + abs_y);
-   }
-   else
-   {
-      angle = atan2i_coeff_2 - atan2i_coeff_1 * (x + abs_y) / (abs_y - x);
-   }
-   if (y < 0)
-      return(-angle);     // negate if in quad III or IV
-   else
-      return(angle);
+	int angle;
+	int abs_y = abs(y);
+	if( abs_y == 0 )
+	abs_y = 1;
+	if (x>=0)
+	{
+		angle = atan2i_coeff_1 - atan2i_coeff_1 * (x - abs_y) / (x + abs_y);
+	}
+	else
+	{
+		angle = atan2i_coeff_2 - atan2i_coeff_1 * (x + abs_y) / (abs_y - x);
+	}
+	if (y < 0)
+	return(-angle);     // negate if in quad III or IV
+	else
+	return(angle);
 }
 
 BATTLE_INPUT_STATE GetDirectionalJoystickInput(int direction, int player)
 {
 	BATTLE_INPUT_STATE InputState = 0;
+	BOOLEAN btnUsed = TRUE;
 	static BOOLEAN JoystickThrust[NUM_PLAYERS] = { FALSE, FALSE };
 	static BOOLEAN JoystickTapFlag[NUM_PLAYERS] = { FALSE, FALSE };
 	static TimeCount JoystickTapTime[NUM_PLAYERS] = { 0, 0 };
-
+	
 	/* if (CurrentInputState.key[PlayerControls[player]][KEY_THRUST]) */
 	/* 	InputState |= BATTLE_THRUST; */
-
+	
 	/* if( VControl_GetJoysticksAmount() <= 0 ) */
 	/* { */
 	/* 	if (CurrentInputState.key[PlayerControls[player]][KEY_LEFT]) */
@@ -519,7 +520,7 @@ BATTLE_INPUT_STATE GetDirectionalJoystickInput(int direction, int player)
 	/* 		InputState |= BATTLE_THRUST; */
 	/* 	return InputState; */
 	/* } */
-
+	
 	int axisX = VControl_GetJoyAxis(0, player * 2), axisY = VControl_GetJoyAxis(0, player * 2 + 1);
 	//int axisX = SDL_JoystickGetAxis(&joysticks[0].stick, player * 2), axisY = SDL_JoystickGetAxis(&joysticks[0].stick, player * 2 + 1);
 	
@@ -544,63 +545,87 @@ BATTLE_INPUT_STATE GetDirectionalJoystickInput(int direction, int player)
 			axisY = 0;
 		}
 	}
-
+	
+	if( abs( axisX ) > 25000 || abs( axisY ) > 25000 )
+		btnUsed = FALSE;
+		
+	// we should always process the d-pad over the analogue sticks
+	//BOOLEAN btnUsed = FALSE;
+	
+	if (CurrentInputState.key[PlayerOne][KEY_LEFT]) {
+		InputState |= BATTLE_LEFT;
+		btnUsed = TRUE;
+	}
+	if (CurrentInputState.key[PlayerOne][KEY_RIGHT]) {
+		InputState |= BATTLE_RIGHT;
+		btnUsed = TRUE;
+	}
+	// we don't prematurely return after up was pressed as we also
+	// use the up button as a thrust control using the second stick
+	if (CurrentInputState.key[PlayerOne][KEY_UP]) {
+		InputState |= BATTLE_THRUST;
+	}
+	
+	// d-pad was used, disregard the analogue sticks
+	if (btnUsed == TRUE)
+		return InputState;
+	
 	/*if( axisX == 0 && axisY == 0 )
-	{
+		{
 		// Process keyboard input only when joystick is not used
 		if (CurrentInputState.key[PlayerControls[player]][KEY_LEFT])
-			InputState |= BATTLE_LEFT;
+		InputState |= BATTLE_LEFT;
 		if (CurrentInputState.key[PlayerControls[player]][KEY_RIGHT])
-			InputState |= BATTLE_RIGHT;
+		InputState |= BATTLE_RIGHT;
 		if (CurrentInputState.key[PlayerControls[player]][KEY_UP])
-			InputState |= BATTLE_THRUST;
+		InputState |= BATTLE_THRUST;
 	}*/
-
+	
 	/*if( !optDirectionalJoystick )
-	{
+		{
 		if( player == 1 )
 		{
-			axisX = - axisX;
-			axisY = - axisY;
+		axisX = - axisX;
+		axisY = - axisY;
 		}
 		if( axisX < -10000 )
-			InputState |= BATTLE_LEFT;
+		InputState |= BATTLE_LEFT;
 		if( axisX > 10000 )
-			InputState |= BATTLE_RIGHT;
+		InputState |= BATTLE_RIGHT;
 		if( axisY < 0 )
-			InputState |= BATTLE_THRUST;
+		InputState |= BATTLE_THRUST;
 		return InputState;
 	}*/
-
+	
 	if( axisX != 0 || axisY != 0 )
 	{
 		int angle = atan2i(axisY, axisX), diff;
 		// Convert it to 16 directions used by Melee
 		angle += atan2i_PI / SHIP_DIRECTIONS;
 		if( angle < 0 )
-			angle += atan2i_PI * 2;
+		angle += atan2i_PI * 2;
 		if( angle > atan2i_PI * 2 )
-			angle -= atan2i_PI * 2;
+		angle -= atan2i_PI * 2;
 		angle = angle * SHIP_DIRECTIONS / atan2i_PI / 2;
-
+		
 		diff = angle - direction - SHIP_DIRECTIONS / 4;
 		while( diff >= SHIP_DIRECTIONS )
-			diff -= SHIP_DIRECTIONS;
+		diff -= SHIP_DIRECTIONS;
 		while( diff < 0 )
-			diff += SHIP_DIRECTIONS;
-
+		diff += SHIP_DIRECTIONS;
+		
 		if( diff < SHIP_DIRECTIONS / 2 )
-			InputState |= BATTLE_LEFT;
+		InputState |= BATTLE_LEFT;
 		if( diff > SHIP_DIRECTIONS / 2 )
-			InputState |= BATTLE_RIGHT;
-
+		InputState |= BATTLE_RIGHT;
+		
 		if( !JoystickTapFlag[player] )
 		{
 			JoystickTapFlag[player] = TRUE;
 			if( GetTimeCounter() < JoystickTapTime[player] + ONE_SECOND )
-				JoystickThrust[player] = !JoystickThrust[player];
+			JoystickThrust[player] = !JoystickThrust[player];
 			else
-				JoystickThrust[player] = TRUE;
+			JoystickThrust[player] = TRUE;
 		}
 		//For now, we dont need the below. Maybe when I add this to navigation for the lander or in space 
 		/*if( JoystickThrust[player] )

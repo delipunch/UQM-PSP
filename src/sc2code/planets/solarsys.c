@@ -822,16 +822,20 @@ ProcessShipControls (void)
 
 	ClockTick ();
 
-	if (CurrentInputState.key[PlayerOne][KEY_UP])
-		delta_y = -1;
-	else
-		delta_y = 0;
+	index = GetFrameIndex (GLOBAL (ShipStamp.frame));
+	BATTLE_INPUT_STATE InputState = GetDirectionalJoystickInput(index, 0);
+	InputState |= CurrentInputState.key[PlayerOne][KEY_UP] << BATTLE_THRUST;
 
-	delta_x = 0;
-	if (CurrentInputState.key[PlayerOne][KEY_LEFT])
-		delta_x -= 1;
-	if (CurrentInputState.key[PlayerOne][KEY_RIGHT])
-		delta_x += 1;
+    if (InputState & BATTLE_THRUST || CurrentInputState.key[PlayerOne][KEY_UP])
+      delta_y = -1;
+    else
+      delta_y = 0;
+
+    delta_x = 0;
+    if (InputState & BATTLE_LEFT || CurrentInputState.key[PlayerOne][KEY_LEFT])
+      delta_x -= 1;
+    if (InputState & BATTLE_RIGHT || CurrentInputState.key[PlayerOne][KEY_RIGHT])
+      delta_x += 1;
 		
 	if (delta_x || delta_y < 0)
 	{
